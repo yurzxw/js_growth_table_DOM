@@ -6,66 +6,52 @@ const appendColumnButton = document.querySelector('.append-column');
 const removeColumnButton = document.querySelector('.remove-column');
 const max = 10;
 const min = 2;
-let counterR = [...document.querySelectorAll('tr')].length;
-let counterC = document.querySelector('tr').children.length;
 
 function updateButtonStates() {
-  appendRowButton.disabled = counterR >= max;
-  removeRowButton.disabled = counterR <= min;
-  appendColumnButton.disabled = counterC >= max;
-  removeColumnButton.disabled = counterC <= min;
+  const counterR = [...document.querySelectorAll('tr')].length;
+  const counterC = document.querySelector('tr').children.length;
+
+  appendRowButton.disabled = counterR === max;
+  removeRowButton.disabled = counterR === min;
+  appendColumnButton.disabled = counterC === max;
+  removeColumnButton.disabled = counterC === min;
 }
 
 appendRowButton.addEventListener('click', (e) => {
-  if (counterR < max) {
-    const table = document.querySelector('tbody');
-    const newRow = table.firstChild.cloneNode(true);
+  const table = document.querySelector('tbody');
+  const newRow = table.firstChild.cloneNode(true);
 
-    table.appendChild(newRow);
-    counterR++;
-    updateButtonStates();
-  }
+  table.appendChild(newRow);
+  updateButtonStates();
 });
 
 removeRowButton.addEventListener('click', (e) => {
-  if (counterR > min) {
-    const table = document.querySelector('tbody');
-    const deletedRow = table.lastChild;
+  const table = document.querySelector('tbody');
+  const deletedRow = table.lastChild;
 
-    table.removeChild(deletedRow);
-    counterR--;
-    updateButtonStates();
-  }
+  table.removeChild(deletedRow);
+  updateButtonStates();
 });
 
 appendColumnButton.addEventListener('click', (e) => {
-  if (counterC < max) {
-    appendColumnButton.disabled = false;
+  const rows = [...document.getElementsByTagName('tr')];
 
-    const rows = [...document.getElementsByTagName('tr')];
+  rows.forEach((row) => {
+    const td = document.querySelector('td').cloneNode(true);
 
-    rows.forEach((row) => {
-      const td = document.querySelector('td').cloneNode(true);
-
-      row.appendChild(td);
-    });
-    counterC++;
-    updateButtonStates();
-  }
+    row.appendChild(td);
+  });
+  updateButtonStates();
 });
 
 removeColumnButton.addEventListener('click', (e) => {
-  if (counterC > min) {
-    removeColumnButton.disabled = false;
+  const rows = [...document.getElementsByTagName('tr')];
 
-    const rows = [...document.getElementsByTagName('tr')];
+  rows.forEach((row) => {
+    const lastChild = row.lastChild;
 
-    rows.forEach((row) => {
-      const lastChild = row.lastChild;
+    row.removeChild(lastChild);
+  });
 
-      row.removeChild(lastChild);
-    });
-    counterC--;
-    updateButtonStates();
-  }
+  updateButtonStates();
 });
