@@ -6,39 +6,42 @@ const appendColumnButton = document.querySelector('.append-column');
 const removeColumnButton = document.querySelector('.remove-column');
 const max = 10;
 const min = 2;
+let counterR = [...document.querySelectorAll('tr')].length;
+let counterC = document.querySelector('tr').children.length;
+
+function updateButtonStates() {
+  appendRowButton.disabled = counterR >= max;
+  removeRowButton.disabled = counterR <= min;
+  appendColumnButton.disabled = counterC >= max;
+  removeColumnButton.disabled = counterC <= min;
+}
 
 appendRowButton.addEventListener('click', (e) => {
-  let counter = [...document.querySelectorAll('tr')].length;
-
-  counter++;
-
-  if (counter >= min && counter <= max) {
+  if (counterR < max) {
     const table = document.querySelector('tbody');
     const newRow = table.firstChild.cloneNode(true);
 
     table.appendChild(newRow);
+    counterR++;
+    updateButtonStates();
   }
 });
 
 removeRowButton.addEventListener('click', (e) => {
-  let counter = [...document.querySelectorAll('tr')].length;
-
-  counter--;
-
-  if (counter >= min && counter <= max) {
+  if (counterR > min) {
     const table = document.querySelector('tbody');
     const deletedRow = table.lastChild;
 
     table.removeChild(deletedRow);
+    counterR--;
+    updateButtonStates();
   }
 });
 
 appendColumnButton.addEventListener('click', (e) => {
-  let counter = document.querySelector('tr').children.length;
+  if (counterC < max) {
+    appendColumnButton.disabled = false;
 
-  counter++;
-
-  if (counter >= min && counter <= max) {
     const rows = [...document.getElementsByTagName('tr')];
 
     rows.forEach((row) => {
@@ -46,15 +49,15 @@ appendColumnButton.addEventListener('click', (e) => {
 
       row.appendChild(td);
     });
+    counterC++;
+    updateButtonStates();
   }
 });
 
 removeColumnButton.addEventListener('click', (e) => {
-  let counter = document.querySelector('tr').children.length;
+  if (counterC > min) {
+    removeColumnButton.disabled = false;
 
-  counter--;
-
-  if (counter >= min && counter <= max) {
     const rows = [...document.getElementsByTagName('tr')];
 
     rows.forEach((row) => {
@@ -62,5 +65,7 @@ removeColumnButton.addEventListener('click', (e) => {
 
       row.removeChild(lastChild);
     });
+    counterC--;
+    updateButtonStates();
   }
 });
